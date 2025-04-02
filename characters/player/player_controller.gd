@@ -37,4 +37,15 @@ func handle_movement() -> void:
 
 
 func handle_breaking() -> void:
-	$"../Tilemaps".break_tile(global_position + (input_direction * 16))
+	var tile_map = $"../Tilemaps"
+	
+	var break_offset = Vector2.ZERO
+	if input_direction.x != 0:
+		break_offset = Vector2(input_direction.x, 0)
+	elif input_direction.y != 0:
+		break_offset = Vector2(0, input_direction.y)
+	
+	if break_offset == Vector2.ZERO:
+		return  # No directional input, no breaking
+	
+	tile_map.request_break_tile(global_position, break_offset)

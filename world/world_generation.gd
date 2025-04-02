@@ -7,7 +7,10 @@ const HEIGHT = 60
 var iron_noise = FastNoiseLite.new()
 var copper_noise = FastNoiseLite.new()
 
+var tile_healths := {}
+
 @export var tile_map: TileMapLayer
+@export var break_tile_map: TileMapLayer
 @export_tool_button("generate world")
 var button = debug_gen_world
 @export var iron_noise_frequency: float = 0.1
@@ -55,5 +58,44 @@ func generate_world() -> void:
 	#tile_map.set_cells_terrain_connect(copper_tiles, 0, 3)
 
 
+func request_break_tile(player_pos: Vector2, break_offset: Vector2) -> void:
+	var break_pos = player_pos + (break_offset * 16)
+	break_tile(break_pos)
+
+
 func break_tile(pos: Vector2) -> void:
-	tile_map.set_cells_terrain_connect([tile_map.local_to_map(pos)], 0, -1, true)
+	var tile_pos = tile_map.local_to_map(pos)
+	var tile_data = tile_map.get_cell_tile_data(tile_pos)
+	if tile_data == null: 
+		return  # No tile to break
+	
+	var terrain_data = tile_data.get_terrain()
+	
+	if not tile_healths.has(tile_pos):
+		tile_healths[tile_pos] = get_tile_max_health(terrain_data)
+		
+	tile_healths[tile_pos] -= 1
+	display_tile_health_ui(tile_pos, tile_healths[tile_pos])
+	
+	if tile_healths[tile_pos] <= 0:
+		destroy_tile(tile_pos, terrain_data)
+
+
+func get_tile_max_health(terrain_id: int) -> int:
+	match terrain_id:
+		0: return 1  # Dirt
+		1: return 3  # Stone
+		2: return 5  # Iron ore
+		3: return 4  # Copper ore
+	return 2  # Default health
+
+
+func display_tile_health_ui(tile_pos: Vector2i, current_health: int):
+	break_tile_map.set_cell(tile_pos, 4, Vector2i(current_health - 1, 0))
+
+
+func destroy_tile(tile_pos: Vector2i, tile_id: int) -> void:
+	tile_map.set_cells_terrain_connect([tile_pos], 0, -1, true)
+	for cell_coord in break_tile_map.get_surrounding_cells(tile_pos):
+		break_tile_map.erase_cell(cell_coord)
+	tile_healths.erase(tile_pos)
