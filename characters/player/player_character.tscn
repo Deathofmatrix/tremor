@@ -17,7 +17,7 @@ position = Vector2(0, -3)
 texture = ExtResource("2_n3ox2")
 region_rect = Rect2(0, 288, 32, 32)
 
-[node name="Timer" type="Timer" parent="."]
+[node name="InteractTimer" type="Timer" parent="."]
 process_callback = 0
 wait_time = 0.1
 one_shot = true

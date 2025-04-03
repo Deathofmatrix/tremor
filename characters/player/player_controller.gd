@@ -4,15 +4,39 @@ extends CharacterBody2D
 const SPEED = 50.0
 const JUMP_VELOCITY = -160.0
 
-@onready var timer: Timer = $Timer
+@onready var mine_timer: Timer = $InteractTimer
+@onready var tilemaps: Node2D = $"../Tilemaps"
+
+var distance_to_tile: float = 0.0
+var focus_distance: float = 6.0
+var is_heartbeat_active: bool = false
+var camera: PlayerCamera
 
 var is_underground: bool = false
 var input_direction: Vector2
 
+
+func _ready() -> void:
+	camera = get_viewport().get_camera_2d() as PlayerCamera
+
+
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact") and timer.is_stopped():
+	if event.is_action_pressed("interact") and mine_timer.is_stopped():
 		handle_breaking()
-		timer.start()
+		mine_timer.start()
+
+
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("focus"):
+		is_heartbeat_active = true
+		distance_to_tile = tilemaps.distance_to_closest_tile_in_area(position, focus_distance)
+		var heartbeat_speed = remap(distance_to_tile, 0, focus_distance, 5.0, 1.0)
+		camera.start_heartbeat(heartbeat_speed)
+	
+	if Input.is_action_just_released("focus"):
+		is_heartbeat_active = false
+		camera.stop_heartbeat()
+
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -20,6 +44,7 @@ func _physics_process(delta: float) -> void:
 	
 	input_direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	handle_movement()
+	if is_heartbeat_active: velocity = Vector2.ZERO
 	move_and_slide()
 
 
