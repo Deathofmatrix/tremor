@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://8aqvh81qic6b"]
+
+[ext_resource type="Texture2D" uid="uid://cfyttbpc20th" path="res://assets/tile_0020.png" id="1_clxf8"]
+[ext_resource type="Script" uid="uid://d2fk3paxb1de" path="res://items/dropped_item.gd" id="1_f38jm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f38jm"]
+radius = 4.0
+
+[node name="DroppedItem" type="RigidBody2D"]
+script = ExtResource("1_f38jm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_f38jm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_clxf8")

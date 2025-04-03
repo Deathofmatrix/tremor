@@ -84,10 +84,10 @@ func break_tile(pos: Vector2) -> void:
 
 func get_tile_max_health(terrain_id: int) -> int:
 	match terrain_id:
-		0: return 1  # Dirt
-		1: return 3  # Stone
-		2: return 5  # Iron ore
-		3: return 4  # Copper ore
+		0: return 2  # Dirt
+		1: return 4  # Stone
+		2: return 6  # Iron ore
+		3: return 8  # Copper ore
 	return 2  # Default health
 
 
@@ -100,6 +100,18 @@ func destroy_tile(tile_pos: Vector2i, tile_id: int) -> void:
 	for cell_coord in break_tile_map.get_surrounding_cells(tile_pos):
 		break_tile_map.erase_cell(cell_coord)
 	tile_healths.erase(tile_pos)
+	
+	if tile_id <= 1: return
+	spawn_drop(tile_pos, tile_id)
+
+
+func spawn_drop(tile_pos: Vector2i, tile_id: int) -> void:
+	var drop_scene = load("res://items/dropped_item.tscn")
+	var drop = drop_scene.instantiate()
+	get_parent().add_child(drop)
+	drop.global_position = tile_map.map_to_local(tile_pos)
+	
+	drop.set_item(tile_id)
 
 
 func distance_to_closest_tile_in_area(pos: Vector2, radius: int) -> float:
