@@ -6,7 +6,8 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_f38jm"]
 radius = 4.0
 
-[node name="DroppedItem" type="RigidBody2D"]
+[node name="DroppedItem" type="RigidBody2D" groups=["drops"]]
+can_sleep = false
 script = ExtResource("1_f38jm")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

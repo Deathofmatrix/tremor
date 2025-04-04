@@ -98,7 +98,8 @@ func display_tile_health_ui(tile_pos: Vector2i, current_health: int):
 func destroy_tile(tile_pos: Vector2i, tile_id: int) -> void:
 	tile_map.set_cells_terrain_connect([tile_pos], 0, -1, false)
 	for cell_coord in break_tile_map.get_surrounding_cells(tile_pos):
-		break_tile_map.erase_cell(cell_coord)
+		if break_tile_map.get_cell_source_id(cell_coord) != 4:
+			break_tile_map.erase_cell(cell_coord)
 	tile_healths.erase(tile_pos)
 	
 	if tile_id <= 1: return

@@ -15,6 +15,8 @@ var camera: PlayerCamera
 var is_underground: bool = false
 var input_direction: Vector2
 
+var money = 0
+
 
 func _ready() -> void:
 	camera = get_viewport().get_camera_2d() as PlayerCamera
@@ -74,3 +76,9 @@ func handle_breaking() -> void:
 		return  # No directional input, no breaking
 	
 	tile_map.request_break_tile(global_position, break_offset)
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.is_in_group("drops"):
+		money += body.value
+		$"../CanvasLayer/HUD/Label".text = "$ " + str(money)
+		body.queue_free()
