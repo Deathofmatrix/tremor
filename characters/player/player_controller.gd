@@ -15,11 +15,15 @@ var camera: PlayerCamera
 var is_underground: bool = false
 var input_direction: Vector2
 
+var mine_cooldown: float = 0.001
+var mine_power: int = 1
+
 var money = 0
 
 
 func _ready() -> void:
 	camera = get_viewport().get_camera_2d() as PlayerCamera
+	mine_timer.wait_time = mine_cooldown
 
 
 func _input(event: InputEvent) -> void:
@@ -75,10 +79,13 @@ func handle_breaking() -> void:
 	if break_offset == Vector2.ZERO:
 		return  # No directional input, no breaking
 	
-	tile_map.request_break_tile(global_position, break_offset)
+	tile_map.request_break_tile(global_position, break_offset, mine_power)
+
+func set_money(value:int):
+	money = value
+	$"../CanvasLayer/HUD/Label".text = str(money)
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("drops"):
-		money += body.value
-		$"../CanvasLayer/HUD/Label".text = "$ " + str(money)
+		set_money(money + body.value)
 		body.queue_free()

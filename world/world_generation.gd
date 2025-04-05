@@ -59,12 +59,12 @@ func generate_world() -> void:
 	tile_map.set_cells_terrain_connect(copper_tiles, 0, 3)
 
 
-func request_break_tile(player_pos: Vector2, break_offset: Vector2) -> void:
+func request_break_tile(player_pos: Vector2, break_offset: Vector2, damage: int) -> void:
 	var break_pos = player_pos + (break_offset * 16)
-	break_tile(break_pos)
+	break_tile(break_pos, damage)
 
 
-func break_tile(pos: Vector2) -> void:
+func break_tile(pos: Vector2, damage: int) -> void:
 	var tile_pos = tile_map.local_to_map(pos)
 	var tile_data = tile_map.get_cell_tile_data(tile_pos)
 	if tile_data == null: 
@@ -75,7 +75,7 @@ func break_tile(pos: Vector2) -> void:
 	if not tile_healths.has(tile_pos):
 		tile_healths[tile_pos] = get_tile_max_health(terrain_data)
 		
-	tile_healths[tile_pos] -= 1
+	tile_healths[tile_pos] -= damage
 	display_tile_health_ui(tile_pos, tile_healths[tile_pos])
 	
 	if tile_healths[tile_pos] <= 0:
