@@ -15,24 +15,24 @@ var camera: PlayerCamera
 var is_underground: bool = false
 var input_direction: Vector2
 
-var mine_cooldown: float = 0.001
+var mine_cooldown: float = 1
 var mine_power: int = 1
+var speed_multiplier: float = 1
 
-var money = 0
+@export var money = 0
 
 
 func _ready() -> void:
 	camera = get_viewport().get_camera_2d() as PlayerCamera
 	mine_timer.wait_time = mine_cooldown
-
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact") and mine_timer.is_stopped():
-		handle_breaking()
-		mine_timer.start()
+	set_money(money)
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_pressed("interact") and mine_timer.is_stopped():
+		handle_breaking()
+		mine_timer.start()
+	
 	if Input.is_action_just_pressed("focus"):
 		is_heartbeat_active = true
 		distance_to_tile = tilemaps.distance_to_closest_tile_in_area(position, focus_distance)
@@ -62,7 +62,7 @@ func handle_movement() -> void:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 	elif is_underground:
 		if input_direction:
-			velocity = input_direction * SPEED
+			velocity = input_direction * SPEED * speed_multiplier
 		else:
 			velocity = Vector2.ZERO
 
@@ -84,6 +84,14 @@ func handle_breaking() -> void:
 func set_money(value:int):
 	money = value
 	$"../CanvasLayer/HUD/Label".text = str(money)
+
+
+func apply_upgrade(upgrade_name: String):
+	match upgrade_name:
+		"more_damage": mine_power += 1
+		"faster_dig": mine_cooldown -= 0.3
+		"faster_move": speed_multiplier += 0.5
+
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("drops"):
