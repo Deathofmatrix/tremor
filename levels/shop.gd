@@ -5,23 +5,29 @@ extends Control
 @onready var buttons = [
 	$CenterContainer/HBoxContainer/Button1,
 	$CenterContainer/HBoxContainer/Button2,
-	$CenterContainer/HBoxContainer/Button3
+	$CenterContainer/HBoxContainer/Button3,
+	$CenterContainer/HBoxContainer/Button4
 ]
 
 var upgrades = {
 	"more_damage": {
-		"cost": 20,
+		"cost": 10,
 		"max_level": 2,
 		"current_level": 0
 	},
 	"faster_dig": {
-		"cost": 5,
-		"max_level": 4,
+		"cost": 3,
+		"max_level": 3,
 		"current_level": 0
 	},
 	"faster_move": {
-		"cost": 10,
+		"cost": 5,
 		"max_level": 3,
+		"current_level": 0
+	},
+	"refill_stamina": {
+		"cost": 1,
+		"max_level": INF,
 		"current_level": 0
 	}
 }
@@ -40,6 +46,7 @@ func _process(delta: float) -> void:
 			0: upgrade_name = "more_damage"
 			1: upgrade_name = "faster_dig"
 			2: upgrade_name = "faster_move"
+			3: upgrade_name = "refill_stamina"
 		
 		var upgrade = upgrades[upgrade_name]
 		
@@ -60,6 +67,8 @@ func _on_button_pressed(pressed_button: TextureButton, is_pressed: bool):
 		_upgrade("faster_dig", pressed_button)
 	if pressed_button == buttons[2]:
 		_upgrade("faster_move", pressed_button)
+	if pressed_button == buttons[3]:
+		_upgrade("refill_stamina", pressed_button)
 
 
 func _upgrade(upgrade_name: String, pressed_button: TextureButton):
@@ -73,5 +82,8 @@ func _upgrade(upgrade_name: String, pressed_button: TextureButton):
 		upgrade["current_level"] += 1
 		player_character.apply_upgrade(upgrade_name)
 		print(upgrade_name, " upgraded to level ", upgrade["current_level"])
+		if upgrade["current_level"] == upgrade["max_level"]:
+			var label = pressed_button.get_child(0) as Label
+			label.text = "MAX\nLEVEL"
 	else:
 		print("Max level reached or invalid upgrade")
