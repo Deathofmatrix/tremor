@@ -1,7 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://bvp47lrautxcx"]
+[gd_scene load_steps=12 format=3 uid="uid://bvp47lrautxcx"]
 
 [ext_resource type="Script" uid="uid://1a0b1djcjdbr" path="res://characters/player/player_controller.gd" id="1_n2xwh"]
 [ext_resource type="Texture2D" uid="uid://bwvcahatygei3" path="res://assets/Kenney Tilemap/tile_0240.png" id="2_n3ox2"]
+[ext_resource type="AudioStream" uid="uid://ekffnvg3w8jb" path="res://assets/audio/sfx/footstep.mp3" id="3_n3ox2"]
+[ext_resource type="AudioStream" uid="uid://bu3oulw83qo5i" path="res://assets/audio/sfx/mining.mp3" id="4_nn5ti"]
+[ext_resource type="AudioStream" uid="uid://beopqlsg67uc4" path="res://assets/audio/1 bit cave.ogg" id="5_iwgda"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_nn5ti"]
 radius = 6.0
@@ -14,6 +17,16 @@ bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n3ox2"]
 bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_nn5ti"]
+random_pitch = 1.1
+random_volume_offset_db = 1.0
+streams_count = 1
+stream_0/stream = ExtResource("3_n3ox2")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_iwgda"]
+streams_count = 1
+stream_0/stream = ExtResource("4_nn5ti")
 
 [node name="PlayerCharacter" type="CharacterBody2D"]
 script = ExtResource("1_n2xwh")
@@ -44,5 +57,21 @@ offset_bottom = -7.0
 theme_override_styles/background = SubResource("StyleBoxFlat_n2xwh")
 theme_override_styles/fill = SubResource("StyleBoxFlat_n3ox2")
 show_percentage = false
+
+[node name="FootstepAudioPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_nn5ti")
+bus = &"SFX"
+
+[node name="MineAudioPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_iwgda")
+volume_db = -20.0
+bus = &"SFX"
+
+[node name="Music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_iwgda")
+volume_db = -10.0
+autoplay = true
+bus = &"SFX"
+parameters/looping = true
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

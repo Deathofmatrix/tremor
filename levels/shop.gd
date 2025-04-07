@@ -87,3 +87,7 @@ func _upgrade(upgrade_name: String, pressed_button: TextureButton):
 			label.text = "MAX\nLEVEL"
 	else:
 		print("Max level reached or invalid upgrade")
+
+
+func _on_button_4_pressed() -> void:
+	$ButtonSound.play()

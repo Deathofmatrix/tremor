@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://beopqlsg67uc4"
+path="res://.godot/imported/1 bit cave.ogg-e0eeb8bf9b92641e7b36160ce6bda05a.oggvorbisstr"
+
+[deps]
+
+source_file="res://assets/audio/1 bit cave.ogg"
+dest_files=["res://.godot/imported/1 bit cave.ogg-e0eeb8bf9b92641e7b36160ce6bda05a.oggvorbisstr"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

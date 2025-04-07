@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b32brygqkqlg0"
+path="res://.godot/imported/break dirt.mp3-0615729acddc39fba4b871570650cd71.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/sfx/break dirt.mp3"
+dest_files=["res://.godot/imported/break dirt.mp3-0615729acddc39fba4b871570650cd71.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

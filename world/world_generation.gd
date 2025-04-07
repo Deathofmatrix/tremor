@@ -4,6 +4,15 @@ extends Node2D
 const WIDTH = 40
 const HEIGHT = 60
 
+@onready var break_sfx: AudioStreamPlayer2D = $BreakSFX
+
+var break_sfx_array = [
+	preload("res://assets/audio/sfx/break dirt.mp3"),
+	preload("res://assets/audio/sfx/break stone.mp3"),
+	preload("res://assets/audio/sfx/break iron.mp3"),
+	preload("res://assets/audio/sfx/break component.mp3")
+	]
+
 var iron_noise = FastNoiseLite.new()
 var copper_noise = FastNoiseLite.new()
 
@@ -103,6 +112,7 @@ func destroy_tile(tile_pos: Vector2i, tile_id: int) -> void:
 		if break_tile_map.get_cell_source_id(cell_coord) != 4:
 			break_tile_map.erase_cell(cell_coord)
 	tile_healths.erase(tile_pos)
+	play_break_sound(tile_pos, tile_id)
 	
 	if tile_id <= 1: return
 	spawn_drop(tile_pos, tile_id)
@@ -115,6 +125,12 @@ func spawn_drop(tile_pos: Vector2i, tile_id: int) -> void:
 	drop.global_position = tile_map.map_to_local(tile_pos)
 	
 	drop.set_item(tile_id)
+
+
+func play_break_sound(tile_pos: Vector2i, tile_id: int) -> void:
+	break_sfx.global_position = tile_map.map_to_local(tile_pos)
+	break_sfx.stream = break_sfx_array[tile_id]
+	break_sfx.play()
 
 
 func distance_to_closest_tile_in_area(pos: Vector2, radius: int) -> float:
